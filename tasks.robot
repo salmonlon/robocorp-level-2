@@ -27,7 +27,9 @@ Fill the form
     [Arguments]    ${order}
     Select From List By Value   id:head     ${order}[Head]
     Select Radio Button    body     ${order}[Body]  
-    Input Text         ${order}[Legs]
+
+    # todo: could be more robust
+    Input Text    xpath: //input[@placeholder='Enter the part number for the legs']     ${order}[Legs]
 
 
 *** Tasks ***
@@ -46,5 +48,3 @@ Order robots from RobotSpareBin Industries Inc
         # Go to order another robot
     END
     # Create a ZIP file of the receipts
-
-

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.1.2 (Python 3.7.5 on darwin)" generated="20220104 21:59:59.710" rpa="false" schemaversion="2">
+<suite id="s1" name="Robot Interactive Console" source="/Users/seanxiang/.vscode/extensions/robocorp.robotframework-lsp-0.35.0/src/robotframework_ls/vendored/robotframework_interactive/robot_interactive_console.robot">
+<test id="s1-t1" name="Default Task/Test">
+<kw name="Interpreter Main Loop" library="MainLoop">
+<kw name="Open the robot order website">
+<msg timestamp="20220104 22:00:00.285" level="FAIL">No keyword with name 'Open the robot order website' found.</msg>
+<status status="FAIL" starttime="20220104 22:00:00.285" endtime="20220104 22:00:00.285"/>
+</kw>
+<kw name="Get orders">
+<var>${orders}=</var>
+<status status="NOT RUN" starttime="20220104 22:00:00.291" endtime="20220104 22:00:00.292"/>
+</kw>
+<for flavor="IN">
+<var>${row}</var>
+<value>@{orders}</value>
+<iter>
+<var name="${row}">${row}</var>
+<kw name="Close the annoying modal">
+<status status="NOT RUN" starttime="20220104 22:00:00.301" endtime="20220104 22:00:00.301"/>
+</kw>
+<kw name="Fill the form">
+<arg>${row}</arg>
+<status status="NOT RUN" starttime="20220104 22:00:00.302" endtime="20220104 22:00:00.302"/>
+</kw>
+<kw name="Preview the robot">
+<status status="NOT RUN" starttime="20220104 22:00:00.303" endtime="20220104 22:00:00.303"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" library="BuiltIn">
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="NOT RUN" starttime="20220104 22:00:00.303" endtime="20220104 22:00:00.303"/>
+</kw>
+<kw>
+<var>${GLOBAL_RETRY_COUNT}</var>
+<status status="NOT RUN" starttime="20220104 22:00:00.304" endtime="20220104 22:00:00.304"/>
+</kw>
+<kw>
+<var>${GLOBAL_RETRY_INTERVAL}</var>
+<status status="NOT RUN" starttime="20220104 22:00:00.304" endtime="20220104 22:00:00.305"/>
+</kw>
+<kw name="Submit the order">
+<status status="NOT RUN" starttime="20220104 22:00:00.309" endtime="20220104 22:00:00.309"/>
+</kw>
+<status status="NOT RUN" starttime="20220104 22:00:00.293" endtime="20220104 22:00:00.309"/>
+</iter>
+<status status="NOT RUN" starttime="20220104 22:00:00.293" endtime="20220104 22:00:00.310"/>
+</for>
+<status status="PASS" starttime="20220104 21:59:59.734" endtime="20220104 22:00:04.688"/>
+</kw>
+<status status="PASS" starttime="20220104 21:59:59.733" endtime="20220104 22:00:04.690"/>
+</test>
+<status status="PASS" starttime="20220104 21:59:59.711" endtime="20220104 22:00:04.691"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Robot Interactive Console">Robot Interactive Console</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

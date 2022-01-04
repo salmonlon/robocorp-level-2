@@ -10,6 +10,8 @@ Library    RPA.Tables
 
 *** Variables ***
 ${URL} =    https://robotsparebinindustries.com/#/robot-order
+${GLOBAL_RETRY_COUNT} =    3x
+${GLOBAL_RETRY_INTERVAL} =    1s
 
 *** Keywords ***
 Open the robot order website
@@ -30,7 +32,25 @@ Fill the form
 
     # todo: could be more robust
     Input Text    xpath: //input[@placeholder='Enter the part number for the legs']     ${order}[Legs]
+    Input Text    id:address    text=${order}[Address]
 
+Preview the robot
+    Click Button    id:preview
+    Assert preview generated
+
+Assert preview generated
+    Wait Until Page Contains Element    id:robot-preview-image
+
+Submit the order
+    Click Button    id:order
+    Assert order completed
+
+Assert order completed
+    # Sleep    ${Global_Retry_Interval}
+    Wait Until Page Contains Element    id:receipt
+
+Order another robot
+    Click Button    id:order-another
 
 *** Tasks ***
 Order robots from RobotSpareBin Industries Inc
@@ -40,11 +60,13 @@ Order robots from RobotSpareBin Industries Inc
     FOR    ${row}    IN    @{orders}
         Close the annoying modal
         Fill the form    ${row}
-    #     Preview the robot
-    #     Submit the order
+
+        Wait Until Keyword Succeeds    ${GLOBAL_RETRY_COUNT}    ${GLOBAL_RETRY_INTERVAL}    Preview the robot
+        
+        Wait Until Keyword Succeeds    ${GLOBAL_RETRY_COUNT}    ${GLOBAL_RETRY_INTERVAL}    Submit the order
     #     ${pdf}=    Store the receipt as a PDF file    ${row}[Order number]
     #     ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
     #     Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
-        # Go to order another robot
+        Order another robot
     END
     # Create a ZIP file of the receipts

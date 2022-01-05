@@ -5,6 +5,9 @@ Documentation     Orders robots from RobotSpareBin Industries Inc.
 ...               Embeds the screenshot of the robot to the PDF receipt.
 ...               Creates ZIP archive of the receipts and the images.
 Library    RPA.Browser.Selenium
+Library    RPA.Archive
+Library    RPA.Dialogs
+Library    RPA.FileSystem
 Library    RPA.HTTP
 Library    RPA.Tables
 Library    RPA.PDF
@@ -19,9 +22,26 @@ Open the robot order website
     Open Available Browser    ${URL}
 
 Get orders
-    Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
+    # https://robotsparebinindustries.com/orders.csv
+    ${order_url}=    Get orders dialog
+    Log    ${order_url}
+    Download    url=${order_url}    overwrite=True
+
+    # check if the file is downloaded
+    # ${order_not_exists}=    Does File Not Exist    path=${order_url}
+    # IF    ${order_not_exists}
+    #     ${order_url}=    Set Variable    'https://robotsparebinindustries.com/orders.csv'
+    #     Download    ${order_url}    overwrite=True
+    # END
     ${orders}=    Read table from CSV    ${CURDIR}${/}orders.csv
     [Return]    ${orders} 
+
+
+Get orders dialog
+    Add heading    Please provide input order file:
+    Add text input    order_url    label=Order URL
+    ${result}=    Run dialog
+    [Return]    ${result.order_url}
     
 Close the annoying modal
     Click Button When Visible    css:.btn-dark
@@ -75,12 +95,14 @@ Embed the robot screenshot to the receipt PDF file
     ${screenshot_list}=    Create List    ${screenshot_path}
     Add Files To Pdf    ${screenshot_list}    ${pdf_path}    append=True
 
+Create a ZIP file of the receipts
+    Archive Folder With Zip    ${OUTPUT_DIR}${/}receipts    ${OUTPUT_DIR}${/}receipts.zip
+
 
 *** Tasks ***
 Order robots from RobotSpareBin Industries Inc
     Open the robot order website
     ${orders}=    Get orders
-    # Close the annoying modal
     FOR    ${row}    IN    @{orders}
         Close the annoying modal
         Fill the form    ${row}
@@ -93,4 +115,4 @@ Order robots from RobotSpareBin Industries Inc
         Embed the robot screenshot to the receipt PDF file    ${screenshot_path}    ${pdf_path}
         Order another robot
     END
-    # Create a ZIP file of the receipts
+    Create a ZIP file of the receipts

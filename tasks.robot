@@ -7,10 +7,11 @@ Documentation     Orders robots from RobotSpareBin Industries Inc.
 Library    RPA.Browser.Selenium
 Library    RPA.HTTP
 Library    RPA.Tables
+Library    RPA.PDF
 
 *** Variables ***
 ${URL} =    https://robotsparebinindustries.com/#/robot-order
-${GLOBAL_RETRY_COUNT} =    3x
+${GLOBAL_RETRY_COUNT} =    5x
 ${GLOBAL_RETRY_INTERVAL} =    1s
 
 *** Keywords ***
@@ -19,7 +20,7 @@ Open the robot order website
 
 Get orders
     Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
-    ${orders}=    Read table from CSV    ${CURDIR}/orders.csv
+    ${orders}=    Read table from CSV    ${CURDIR}${/}orders.csv
     [Return]    ${orders} 
     
 Close the annoying modal
@@ -52,6 +53,29 @@ Assert order completed
 Order another robot
     Click Button    id:order-another
 
+Store the receipt as a PDF file 
+    [Arguments]    ${order number}
+    Wait Until Element Is Visible    id:receipt
+    ${receipt_html}=    Get Element Attribute    id:receipt    outerHTML
+
+    ${pdf_path}=    Set Variable    ${OUTPUT_DIR}${/}receipts${/}receipt-${order number}.pdf
+    Html To Pdf    ${receipt_html}    ${pdf_path}
+    [Return]    ${pdf_path}
+
+Take a screenshot of the robot
+    [Arguments]    ${order number}
+    Wait Until Element Is Visible    id:robot-preview-image
+    Sleep    0.5s 
+    ${screenshot_path}=    Set Variable    ${OUTPUT_DIR}${/}screenshots${/}screenshot-${order number}.png
+    Screenshot    id:robot-preview-image    ${screenshot_path}
+    [Return]    ${screenshot_path}
+
+Embed the robot screenshot to the receipt PDF file
+    [Arguments]    ${screenshot_path}    ${pdf_path}
+    ${screenshot_list}=    Create List    ${screenshot_path}
+    Add Files To Pdf    ${screenshot_list}    ${pdf_path}    append=True
+
+
 *** Tasks ***
 Order robots from RobotSpareBin Industries Inc
     Open the robot order website
@@ -64,9 +88,9 @@ Order robots from RobotSpareBin Industries Inc
         Wait Until Keyword Succeeds    ${GLOBAL_RETRY_COUNT}    ${GLOBAL_RETRY_INTERVAL}    Preview the robot
         
         Wait Until Keyword Succeeds    ${GLOBAL_RETRY_COUNT}    ${GLOBAL_RETRY_INTERVAL}    Submit the order
-    #     ${pdf}=    Store the receipt as a PDF file    ${row}[Order number]
-    #     ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
-    #     Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
+        ${pdf_path}=    Store the receipt as a PDF file    ${row}[Order number]
+        ${screenshot_path}=    Take a screenshot of the robot    ${row}[Order number]
+        Embed the robot screenshot to the receipt PDF file    ${screenshot_path}    ${pdf_path}
         Order another robot
     END
     # Create a ZIP file of the receipts

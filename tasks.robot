@@ -20,7 +20,7 @@ ${GLOBAL_RETRY_INTERVAL} =    1s
 
 *** Keywords ***
 Open the robot order website
-    ${URL}=    Get Secret    credentials
+    ${URL}=    Get Secret    certificate_level_2
     Open Available Browser    ${URL}[level-2-root-url]
 
 Get orders

@@ -29,6 +29,7 @@ Get orders
     Log    ${order_url}
     Download    url=${order_url}    overwrite=True
 
+    # TODO: handle when the order url is not valid
     # check if the file is downloaded
     # ${order_not_exists}=    Does File Not Exist    path=${order_url}
     # IF    ${order_not_exists}
